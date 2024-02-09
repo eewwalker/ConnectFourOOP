@@ -24,15 +24,18 @@ class Game {
     this.currPlayer = 1;
     this.start();
   }
+
   makeBoard() {
     for (let y = 0; y < this.height; y++) {
       const emptyRow = Array(this.width).fill(null);
       this.board.push(emptyRow);
     }
   }
+
   makeHtmlBoard() {
     const htmlBoard = document.getElementById("board");
-
+    let rowsArr = Array.from(htmlBoard.querySelectorAll('tr'));
+    rowsArr.map(row => row.remove());
     //create top row for player to drop piece
     const top = document.createElement("tr");
     top.setAttribute("id", "column-top");
@@ -73,7 +76,7 @@ class Game {
   }
 
   placeInTable(y, x) {
-
+    console.log('placeInTable', this);
     const piece = document.createElement('div');
     piece.classList.add('piece');
     piece.classList.add(`p${this.currPlayer}`);
@@ -89,12 +92,10 @@ class Game {
 
 
   checkForWin() {
-    console.log("checkForWin this =", this);
     function _win(cells) {
       // Check four cells to see if they're all color of current player
       //  - cells: list of four (y, x) cells
       //  - returns true if all are legal coordinates & all match currPlayer
-      console.log("_win this = " + this);
       return cells.every(
         ([y, x]) =>
           y >= 0 &&
@@ -103,7 +104,7 @@ class Game {
           x < this.width &&
           this.board[y][x] === this.currPlayer
       );
-    }
+    };
 
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
@@ -115,7 +116,7 @@ class Game {
         const diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
 
         // find winner (only checking each win-possibility as needed)
-        if (_win(horiz).bind(this) || _win(vert).bind(this)|| _win(diagDR).bind(this) || _win(diagDL).bind(this)) {
+        if (_win.call(this, horiz) || _win.call(this, vert) || _win.call(this, diagDR) || _win.call(this, diagDL)) {
           return true;
         }
       }
@@ -136,6 +137,7 @@ class Game {
     // place piece in board and add to HTML table
     this.board[y][x] = this.currPlayer;
     this.placeInTable(y, x);
+    console.log('handleClick this', this);
 
     // check for win
     if (this.checkForWin()) {
@@ -158,8 +160,9 @@ class Game {
   }
 
 }
-
-let myGame = new Game(6, 7);
+new Game(6, 7);
+new Game(6, 7);
+// let myGame =
 
 // game1.start();
 
