@@ -40,7 +40,7 @@ class Game {
     for (let x = 0; x < this.width; x++) {
       const headCell = document.createElement("td");
       headCell.setAttribute("id", `top-${x}`);
-      headCell.addEventListener("click", this.handleClick);
+      headCell.addEventListener("click", this.handleClick.bind(this));
       top.append(headCell);
     }
     htmlBoard.append(top);
@@ -89,12 +89,12 @@ class Game {
 
 
   checkForWin() {
-
+    console.log("checkForWin this =", this);
     function _win(cells) {
       // Check four cells to see if they're all color of current player
       //  - cells: list of four (y, x) cells
       //  - returns true if all are legal coordinates & all match currPlayer
-
+      console.log("_win this = " + this);
       return cells.every(
         ([y, x]) =>
           y >= 0 &&
@@ -115,7 +115,7 @@ class Game {
         const diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
 
         // find winner (only checking each win-possibility as needed)
-        if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
+        if (_win(horiz).bind(this) || _win(vert).bind(this)|| _win(diagDR).bind(this) || _win(diagDL).bind(this)) {
           return true;
         }
       }
@@ -159,7 +159,8 @@ class Game {
 
 }
 
-new Game(6, 7);
+let myGame = new Game(6, 7);
+
 // game1.start();
 
 // start();
